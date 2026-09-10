@@ -17,7 +17,7 @@ use Tests\TestCase;
  */
 class TwilioSmsDriverTest extends TestCase
 {
-    private function notification(string $to = '+258841234567', string $content = 'Marca: Notifika. Teste.'): Notification
+    private function notification(string $to = '+258841234567', string $content = 'Notifika: Teste.'): Notification
     {
         $notification = new Notification;
         $notification->forceFill([

@@ -127,7 +127,7 @@ class SmsNotificationApiTest extends TestCase
         $response->assertJson(['segments' => 2]);
 
         $notification = Notification::first();
-        $this->assertStringStartsWith('Marca: Notifika', $notification->content);
+        $this->assertStringStartsWith('Notifika: ', $notification->content);
     }
 
     public function test_sms_channel_without_any_configuration_returns_422(): void
