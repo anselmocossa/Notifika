@@ -12,8 +12,9 @@ class Notification extends Model
     use HasUuids;
 
     protected $fillable = [
-        'external_id', 'to', 'template_id', 'subject', 'content',
+        'external_id', 'client_id', 'channel', 'driver', 'to', 'template_id', 'subject', 'content',
         'status', 'metadata', 'attempts', 'max_attempts',
+        'provider_message_id', 'encoding', 'segments', 'cost', 'cost_currency',
         'sent_at', 'failed_at', 'error_message',
     ];
 
@@ -21,7 +22,14 @@ class Notification extends Model
         'metadata' => 'array',
         'sent_at' => 'datetime',
         'failed_at' => 'datetime',
+        'segments' => 'integer',
+        'cost' => 'decimal:4',
     ];
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
+    }
 
     public function template(): BelongsTo
     {
@@ -30,15 +38,15 @@ class Notification extends Model
 
     public static function generateExternalId(): string
     {
-        return 'ntf_' . Str::random(12);
+        return 'ntf_'.Str::random(12);
     }
 
-    public function markAsSent(): void
+    public function markAsSent(array $attributes = []): void
     {
-        $this->update([
+        $this->update(array_merge([
             'status' => 'sent',
             'sent_at' => now(),
-        ]);
+        ], $attributes));
     }
 
     public function markAsFailed(string $error): void
