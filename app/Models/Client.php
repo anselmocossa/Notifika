@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\ClientFactory;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,11 +63,16 @@ class Client extends Model
     }
 
     /**
-     * Resolve o cliente "dono" de um pedido autenticado. Os tokens novos
-     * pertencem directamente a um Client; os tokens antigos (criados antes
-     * desta leva) continuam ligados a um User e são atribuídos ao cliente
-     * por omissão — é assim que "os tokens antigos continuam a funcionar"
-     * (CA-01, CA-16) sem quebrar nenhuma integração existente.
+     * Resolve o cliente "dono" de um pedido autenticado. Desde a migração
+     * `2026_09_10_100005_convert_personal_access_tokens_tokenable_id_to_string`,
+     * todo o token Sanctum (novo ou antigo, já reatribuído ao cliente por
+     * omissão — CA-01, CA-16) pertence a um Client: na API, o autenticado é
+     * sempre um Client.
+     *
+     * O `User` já não tem `HasApiTokens`, mas a guarda do Sanctum inclui o
+     * guard `web` (sessão) antes do bearer token — por isso um pedido feito
+     * com uma sessão de painel activa ainda pode chegar aqui com um `User`.
+     * Isso nunca deve dar 500: rejeita-se como 403 em JSON.
      */
     public static function fromAuthenticatable(mixed $authenticatable): self
     {
@@ -74,7 +80,7 @@ class Client extends Model
             return $authenticatable;
         }
 
-        return static::default();
+        throw new AuthorizationException('O autenticado não é um cliente da API.');
     }
 
     public function credentialFor(string $channel): ?ClientChannelCredential
