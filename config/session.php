@@ -214,4 +214,21 @@ return [
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | This value controls the serialization strategy for session data. The
+    | Laravel 13 skeleton default is "json" to help prevent PHP object
+    | "gadget chain" attacks, but that invalidates active sessions on
+    | upgrade. We keep "php" (the implicit Laravel <= 12.x behaviour)
+    | so existing panel sessions are not logged out by this upgrade.
+    |
+    | Supported: "json", "php"
+    |
+    */
+
+    'serialization' => env('SESSION_SERIALIZATION', 'php'),
+
 ];
