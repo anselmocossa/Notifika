@@ -9,6 +9,37 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
 
 ### Adicionado
 
+- **Clientes.** Tabela `clients` (com `brand_name`) e `client_channel_credentials`
+  (credenciais cifradas, `encrypted:array`). Os tokens Sanctum passam a pertencer ao
+  `Client` (`HasApiTokens`); os tokens antigos, ligados a um `User`, continuam a
+  autenticar e ficam atribuídos ao cliente por omissão (`Client::fromAuthenticatable`),
+  que uma instalação self-hosted já tem a partir do seeder (`ClientSeeder`) — funciona
+  do zero mesmo sem correr o seeder, porque `Client::default()` é auto-suficiente
+  (`firstOrCreate`). CA-01, CA-03, CA-16.
+- **Canal SMS via Twilio.** `notifications` ganha `client_id`, `channel`, `driver`,
+  `provider_message_id`, `encoding`, `segments`, `cost`, `cost_currency`; `templates`
+  ganha `client_id` (nulo = global) e `channel`. `ChannelManager` resolve o driver por
+  cliente → instalação → erro 422 "canal não configurado" (CA-04). `TwilioSmsDriver`
+  fala HTTP directo com a API REST da Twilio (sem SDK), classifica os erros permanentes
+  (número inválido, destinatário desinscrito, região bloqueada, limite diário da conta)
+  dos transitórios (429, 5xx, timeout) e grava `provider_message_id` e `cost` quando o
+  fornecedor os devolve (CA-06, CA-07). `MailDriver` é o `EmailChannel` de sempre atrás
+  do novo contrato `ChannelDriver`; `LogDriver` não faz nenhuma chamada de rede e serve
+  o desenvolvimento e os testes (CA-15).
+- `PhoneNumber` normaliza números moçambicanos (82–87, 9 dígitos, com ou sem
+  `+258`/`258`/`00258`) para E.164 (CA-02). `SmsEncoding` detecta GSM-7/UCS-2 pela
+  tabela GSM 03.38 (incluindo a tabela de extensão, que conta 2 por carácter) e estima
+  segmentos (160/153 em GSM-7, 70/67 em UCS-2) (CA-05). `BrandGuard` prefixa
+  `Marca: {brand_name}` quando o corpo de um SMS não menciona a marca do cliente — os
+  `segments` devolvidos já contam esse prefixo (CA-17).
+- API v1: campo `channel` opcional (por omissão `email` — uma integração existente não
+  nota diferença nenhuma, CA-01); o `to` é validado por canal; a resposta acrescenta
+  `channel` e, no SMS, `encoding`/`segments`. `index`/`show` passam a filtrar sempre
+  pelo cliente do token (CA-03) — antes qualquer token via as notificações de todos.
+- Painel Filament: recurso **Clientes** (dados e credenciais por canal; os campos de
+  segredo — Account SID, Auth Token — nunca mostram o valor guardado e só o substituem
+  quando preenchidos de novo, CA-12); **Notificações** ganha filtros de cliente e canal,
+  e mostra canal/segmentos/custo.
 - Testes de fumo: dashboard do painel Filament (`DashboardTest`), páginas
   list/create/edit dos resources de Notificações e Templates
   (`NotificationResourceTest`, `TemplateResourceTest`), e a API v1 de
@@ -61,6 +92,12 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
 
 ### Corrigido
 
+- Um pedido à API v1 sem token e sem `Accept: application/json` respondia
+  500, porque o Laravel tentava redireccionar para a rota nomeada `login`
+  — que não existe (o Filament regista `filament.admin.auth.login`).
+  `bootstrap/app.php` passa a nunca redireccionar pedidos `api/*` e a
+  forçar sempre uma resposta JSON nesse grupo, com ou sem esse cabeçalho:
+  agora dá sempre `401` em JSON (CA-19).
 - 3 CVEs de severidade baixa (CVE-2026-45304, CVE-2026-45305,
   CVE-2026-45133) no `symfony/yaml`, dependência transitiva de
   `laravel/sail`, resolvidas ao actualizar para v8.1.6.
