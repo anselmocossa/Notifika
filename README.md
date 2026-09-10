@@ -2,7 +2,7 @@
 
 Plataforma de Notificações Multicanal Open Source para Moçambique e mercados emergentes.
 
-**Stack:** Laravel 12.69 + Filament 5.8 + Livewire 4.4 + PostgreSQL + Redis
+**Stack:** Laravel 13.31 + Filament 5.8 + Livewire 4.4 + PostgreSQL + Redis
 
 ## Funcionalidades (MVP)
 
@@ -14,7 +14,7 @@ Plataforma de Notificações Multicanal Open Source para Moçambique e mercados 
 
 ## Requisitos
 
-- PHP 8.2+
+- PHP 8.3+
 - Composer
 - PostgreSQL
 - Redis
