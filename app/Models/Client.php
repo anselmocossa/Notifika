@@ -42,14 +42,23 @@ class Client extends Model
     }
 
     /**
-     * O cliente por omissão de uma instalação self-hosted (CA-16). É criado
-     * pelo seeder com o slug configurado em notifika.default_client_slug.
+     * O cliente por omissão de uma instalação self-hosted (CA-16). O
+     * ClientSeeder já o cria à partida, mas esta chamada é auto-suficiente
+     * (firstOrCreate) — uma instalação que nunca correu o seeder, ou uma
+     * base de testes sem seeding, continuam a funcionar "do zero".
      */
     public static function default(): self
     {
         $slug = Config::string('notifika.default_client_slug', 'default');
 
-        return static::query()->where('slug', $slug)->firstOrFail();
+        return static::query()->firstOrCreate(
+            ['slug' => $slug],
+            [
+                'name' => Config::string('app.name', 'Notifika'),
+                'brand_name' => Config::string('app.name', 'Notifika'),
+                'is_active' => true,
+            ],
+        );
     }
 
     /**
