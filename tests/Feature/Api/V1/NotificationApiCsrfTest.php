@@ -3,7 +3,7 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Jobs\SendNotificationJob;
-use App\Models\User;
+use App\Models\Client;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -39,8 +39,8 @@ class NotificationApiCsrfTest extends TestCase
         Queue::fake();
         Mail::fake();
 
-        $user = User::factory()->create();
-        $token = $user->createToken('test-token')->plainTextToken;
+        $client = Client::factory()->create();
+        $token = $client->createToken('test-token')->plainTextToken;
 
         // Nem _token no corpo, nem cabeçalhos X-CSRF-TOKEN / X-XSRF-TOKEN.
         $response = $this->withHeader('Authorization', "Bearer {$token}")

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Jobs\SendNotificationJob;
-use App\Models\User;
+use App\Models\Client;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
@@ -18,8 +18,8 @@ class NotificationApiTest extends TestCase
         Queue::fake();
         Mail::fake();
 
-        $user = User::factory()->create();
-        $token = $user->createToken('test-token')->plainTextToken;
+        $client = Client::factory()->create();
+        $token = $client->createToken('test-token')->plainTextToken;
 
         $response = $this->withHeader('Authorization', "Bearer {$token}")
             ->postJson('/api/v1/notifications', [
