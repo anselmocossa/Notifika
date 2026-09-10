@@ -174,8 +174,8 @@ TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   o `à` e o `Ç` maiúsculo já fazem parte do alfabeto básico GSM-7.
 - **Marca no corpo.** Um SMS para Moçambique sem o nome da marca no corpo pode ser
   bloqueado pela operadora — se o corpo não mencionar o `brand_name` do cliente, o
-  Notifika prefixa `Marca: {brand_name}` automaticamente, e os `segments` devolvidos já
-  contam esse prefixo.
+  Notifika prefixa `{brand_name}: ` automaticamente, na mesma linha (ex.: `Notifika: A
+  sua prestação vence amanhã.`), e os `segments` devolvidos já contam esse prefixo.
 - **Erros permanentes** (não voltam a tentar-se): número inválido, destinatário
   desinscrito (respondeu STOP), região bloqueada nas Geo Permissions da conta, limite
   diário de mensagens excedido. **Erros transitórios** (voltam a tentar-se com
@@ -234,7 +234,7 @@ app/
 ├── Support/Sms/
 │   ├── PhoneNumber.php                # Normaliza números MZ para E.164
 │   ├── SmsEncoding.php                # GSM-7/UCS-2 e contagem de segmentos
-│   ├── BrandGuard.php                 # Prefixa "Marca: " quando falta a marca
+│   ├── BrandGuard.php                 # Prefixa "{brand_name}: " quando falta a marca
 │   └── SenderId.php                   # Detecta um sender ID que parece um número
 ├── Filament/
 │   ├── Resources/

@@ -35,7 +35,7 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
   `+258`/`258`/`00258`) para E.164 (CA-02). `SmsEncoding` detecta GSM-7/UCS-2 pela
   tabela GSM 03.38 (incluindo a tabela de extensão, que conta 2 por carácter) e estima
   segmentos (160/153 em GSM-7, 70/67 em UCS-2) (CA-05). `BrandGuard` prefixa
-  `Marca: {brand_name}` quando o corpo de um SMS não menciona a marca do cliente — os
+  `{brand_name}: ` quando o corpo de um SMS não menciona a marca do cliente — os
   `segments` devolvidos já contam esse prefixo (CA-17).
 - API v1: campo `channel` opcional (por omissão `email` — uma integração existente não
   nota diferença nenhuma, CA-01); o `to` é validado por canal; a resposta acrescenta
@@ -127,5 +127,13 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
 - 3 CVEs de severidade baixa (CVE-2026-45304, CVE-2026-45305,
   CVE-2026-45133) no `symfony/yaml`, dependência transitiva de
   `laravel/sail`, resolvidas ao actualizar para v8.1.6.
+- **`BrandGuard` escrevia a palavra literal "Marca:" no corpo do SMS.** O SDD (§5 e
+  CA-17) dizia que o guard "acrescenta `Marca: `", mas "Marca" era um marcador para o
+  nome da marca do cliente, não texto para enviar tal e qual — um SMS com
+  `brand_name = "Notifika"` e corpo `A sua prestação vence amanhã.` saía como `Marca:
+  Notifika\nA sua prestação vence amanhã.` (com quebra de linha), em vez de `Notifika: A
+  sua prestação vence amanhã.`. Corrigido em `BrandGuard::apply()`: o prefixo passa a
+  ser sempre `{brand_name}: `, na mesma linha, sem a palavra "Marca". Encontrado num
+  E2E real.
 
 ### Removido

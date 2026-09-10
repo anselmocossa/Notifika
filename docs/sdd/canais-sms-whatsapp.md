@@ -129,9 +129,14 @@ Driver  (contrato: send(Notification): SendResult)
   resposta da API e no painel, para o cliente ver o que um acento lhe custa.
 - **`LogDriver`**: não chama ninguém e marca enviado. Serve o desenvolvimento, os testes
   e as demonstrações.
-- **`BrandGuard`**: se o corpo de um SMS não tiver o `brand_name` do cliente, acrescenta
-  `Marca: ` no início, porque em Moçambique uma mensagem sem marca pode ser bloqueada. O
-  prefixo conta nos segmentos e no custo, e a API mostra-o.
+- **`BrandGuard`**: se o corpo de um SMS não mencionar o `brand_name` do cliente (sem
+  distinguir maiúsculas de minúsculas), acrescenta **`{brand_name}: `** no início, na
+  mesma linha, porque em Moçambique uma mensagem sem marca pode ser bloqueada. Nunca
+  usa a palavra literal "Marca" — é o próprio nome da marca do cliente. Por exemplo,
+  com `brand_name = "Notifika"` e corpo `A sua prestação vence amanhã.`, o resultado é
+  `Notifika: A sua prestação vence amanhã.`. Se o corpo já mencionar a marca (em
+  qualquer capitalização) ou o cliente não tiver `brand_name`, o corpo fica tal como
+  está. O prefixo conta nos segmentos e no custo, e a API mostra-o.
 
 ## 6. API v1 — compatível com o que existe
 
@@ -192,7 +197,7 @@ Driver  (contrato: send(Notification): SendResult)
 | CA-14 | Todos os webhooks ficam em `provider_events`, mesmo os que não casam com nenhuma notificação. |
 | CA-15 | **Nenhum teste faz chamadas HTTP reais** (`Http::fake` / cliente Twilio simulado / `LogDriver`). |
 | CA-16 | Self-hosted sem painel de clientes: um cliente por omissão, com credenciais no `.env`, funciona do zero. |
-| CA-17 | Um SMS cujo corpo não tenha o `brand_name` do cliente sai com o prefixo `Marca: `, e os segmentos devolvidos já o contam. |
+| CA-17 | Um SMS cujo corpo não tenha o `brand_name` do cliente sai com o prefixo `{brand_name}: ` (ex.: `Notifika: A sua prestação vence amanhã.`), nunca com a palavra literal "Marca", e os segmentos devolvidos já o contam. |
 | CA-19 | Um pedido à API sem token recebe **401 em JSON**, com ou sem `Accept: application/json` — nunca 500 nem um redireccionamento. |
 | CA-18 | O driver Twilio SMS usa como remetente o **sender ID alfanumérico** do cliente. Se só houver um número internacional, avisa no painel e no log que a Movitel não entrega. |
 
