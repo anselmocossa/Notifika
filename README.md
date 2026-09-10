@@ -192,6 +192,33 @@ TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 | GET | `/api/v1/notifications` | Listar notificações do cliente do token |
 | GET | `/api/v1/notifications/{id}` | Ver status de notificação do cliente do token |
 
+## Testes
+
+Por omissão (`phpunit.xml`), a suite corre em SQLite `:memory:` — rápida, sem
+preparação. Mas o SQLite não impõe tipos de coluna, por isso um defeito de
+esquema (por exemplo, guardar um UUID numa coluna `bigint`) pode passar sem
+ser detectado. **A base de produção é PostgreSQL** — por isso a suite corre
+também aí, num ficheiro de configuração à parte que não muda a omissão SQLite:
+
+```bash
+# 1. Criar a base de testes UMA VEZ (isolada da base de desenvolvimento
+#    "notifika" — nunca correr os testes contra ela)
+createdb -h 127.0.0.1 -U anselmokossa notifika_test
+
+# 2. Correr a suite contra PostgreSQL
+php artisan test -c phpunit.pgsql.xml
+# ou
+vendor/bin/phpunit -c phpunit.pgsql.xml
+
+# Suite em SQLite (omissão, sem preparação)
+php artisan test
+```
+
+`phpunit.pgsql.xml` aponta para `DB_DATABASE=notifika_test` em
+`127.0.0.1:5432`. Corre a suite completa nas duas bases antes de mesclar
+qualquer alteração a `personal_access_tokens`, a `clients` ou a outra coluna
+UUID.
+
 ## Estrutura do Projeto
 
 ```

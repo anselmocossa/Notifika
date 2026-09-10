@@ -10,12 +10,17 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
 ### Adicionado
 
 - **Clientes.** Tabela `clients` (com `brand_name`) e `client_channel_credentials`
-  (credenciais cifradas, `encrypted:array`). Os tokens Sanctum passam a pertencer ao
-  `Client` (`HasApiTokens`); os tokens antigos, ligados a um `User`, continuam a
-  autenticar e ficam atribuídos ao cliente por omissão (`Client::fromAuthenticatable`),
-  que uma instalação self-hosted já tem a partir do seeder (`ClientSeeder`) — funciona
-  do zero mesmo sem correr o seeder, porque `Client::default()` é auto-suficiente
-  (`firstOrCreate`). CA-01, CA-03, CA-16.
+  (credenciais cifradas, `encrypted:array`). Os tokens Sanctum passam a pertencer
+  **só** ao `Client` (`HasApiTokens`) — o `User` deixou de ter esse trait. A migração
+  `2026_09_10_100005_convert_personal_access_tokens_tokenable_id_to_string` transfere,
+  de uma vez, os tokens antigos ligados a um `User` para o cliente por omissão, sem
+  tocar no hash do token: uma integração já emitida continua a autenticar com o mesmo
+  token. Uma instalação self-hosted já tem esse cliente a partir do seeder
+  (`ClientSeeder`) — funciona do zero mesmo sem correr o seeder, porque
+  `Client::default()` é auto-suficiente (`firstOrCreate`). `Client::fromAuthenticatable`
+  simplificou: na API o autenticado é sempre um `Client`; um autenticável que não seja
+  (por exemplo um `User` autenticado por sessão, via o guard `web` do Sanctum) dá 403
+  em JSON, nunca 500. CA-01, CA-03, CA-16.
 - **Canal SMS via Twilio.** `notifications` ganha `client_id`, `channel`, `driver`,
   `provider_message_id`, `encoding`, `segments`, `cost`, `cost_currency`; `templates`
   ganha `client_id` (nulo = global) e `channel`. `ChannelManager` resolve o driver por
@@ -50,6 +55,16 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
   por token Bearer sem token CSRF, incluindo uma asserção estrutural de
   que a rota `POST /api/v1/notifications` não passa por nenhum
   middleware de protecção CSRF (`NotificationApiCsrfTest`).
+- `phpunit.pgsql.xml` corre a suite inteira contra PostgreSQL (base
+  `notifika_test`, isolada da base de desenvolvimento), sem mudar a
+  omissão SQLite do `phpunit.xml` — ver secção "Testes" do README.
+  `LegacyTokenCompatibilityApiTest` passa a recriar de propósito o
+  esquema anterior à migração `2026_09_10_100005` (reverte-a, insere o
+  token com `tokenable_id` inteiro, migra outra vez) para provar de
+  ponta a ponta que um token emitido antes desta leva continua a
+  autenticar, com o mesmo hash, depois do upgrade (CA-01).
+  `NonClientAuthenticationApiTest` cobre o 403 em JSON de um autenticável
+  que não seja `Client`.
 
 ### Alterado
 
@@ -92,6 +107,17 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
 
 ### Corrigido
 
+- **`Client::createToken()` rebentava em PostgreSQL** com `SQLSTATE[22P02]:
+  invalid input syntax for type bigint`. A migração do Sanctum cria
+  `personal_access_tokens.tokenable_id` como `bigint` (pensado para chaves
+  incrementais), mas o `Client` usa UUID (`HasUuids`) — em Postgres, a base de
+  produção, um cliente não conseguia ter token nenhum, o que deitava abaixo
+  todo o modelo multi-cliente. A suite não apanhava isto porque corria só em
+  SQLite `:memory:`, que não impõe tipos de coluna. Corrigido pela migração
+  `2026_09_10_100005_convert_personal_access_tokens_tokenable_id_to_string`,
+  que alarga `tokenable_id` para `string(36)` (cabe um UUID) e, na mesma
+  passagem, transfere os tokens antigos de `User` para o cliente por omissão.
+  Encontrado num E2E real contra PostgreSQL.
 - Um pedido à API v1 sem token e sem `Accept: application/json` respondia
   500, porque o Laravel tentava redireccionar para a rota nomeada `login`
   — que não existe (o Filament regista `filament.admin.auth.login`).
