@@ -2,6 +2,7 @@
 
 namespace App\Channels;
 
+use Exception;
 use App\Models\Notification;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
@@ -22,7 +23,7 @@ class EmailChannel
             });
 
             $notification->markAsSent();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($notification->attempts >= $notification->max_attempts) {
                 $notification->markAsFailed($e->getMessage());
             } else {

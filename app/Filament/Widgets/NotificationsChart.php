@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class NotificationsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Envios (últimos 7 dias)';
+    protected ?string $heading = 'Envios (últimos 7 dias)';
     protected static ?int $sort = 2;
     protected int|string|array $columnSpan = 'full';
 

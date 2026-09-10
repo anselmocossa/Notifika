@@ -2,10 +2,15 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Schemas\Schema;
+use Filament\Infolists\Components\TextEntry;
+use App\Filament\Resources\NotificationResource\Pages\ListNotifications;
+use App\Filament\Resources\NotificationResource\Pages\ViewNotification;
 use App\Filament\Resources\NotificationResource\Pages;
 use App\Models\Notification;
 use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,8 +18,8 @@ use Filament\Tables\Table;
 class NotificationResource extends Resource
 {
     protected static ?string $model = Notification::class;
-    protected static ?string $navigationIcon = 'heroicon-o-bell';
-    protected static ?string $navigationGroup = 'Notificações';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bell';
+    protected static string | \UnitEnum | null $navigationGroup = 'Notificações';
     protected static ?string $label = 'Notificação';
     protected static ?string $pluralLabel = 'Notificações';
 
@@ -27,24 +32,24 @@ class NotificationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('external_id')
+                TextColumn::make('external_id')
                     ->label('ID')
                     ->searchable()
                     ->copyable(),
 
-                Tables\Columns\TextColumn::make('to')
+                TextColumn::make('to')
                     ->label('Destinatário')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('subject')
+                TextColumn::make('subject')
                     ->label('Assunto')
                     ->limit(30),
 
-                Tables\Columns\TextColumn::make('template.name')
+                TextColumn::make('template.name')
                     ->label('Template')
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -55,20 +60,20 @@ class NotificationResource extends Resource
                         default => 'gray',
                     }),
 
-                Tables\Columns\TextColumn::make('attempts')
+                TextColumn::make('attempts')
                     ->label('Tentativas'),
 
-                Tables\Columns\TextColumn::make('sent_at')
+                TextColumn::make('sent_at')
                     ->label('Enviado')
                     ->dateTime('d/m/Y H:i'),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Criado')
                     ->dateTime('d/m/Y H:i'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->options([
                         'queued' => 'Na fila',
                         'processing' => 'Processando',
@@ -79,28 +84,28 @@ class NotificationResource extends Resource
             ->poll('10s');
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
-            Infolists\Components\TextEntry::make('external_id')->label('ID'),
-            Infolists\Components\TextEntry::make('to')->label('Destinatário'),
-            Infolists\Components\TextEntry::make('subject')->label('Assunto'),
-            Infolists\Components\TextEntry::make('content')->label('Conteúdo')->columnSpanFull(),
-            Infolists\Components\TextEntry::make('status')->label('Estado')->badge(),
-            Infolists\Components\TextEntry::make('attempts')->label('Tentativas'),
-            Infolists\Components\TextEntry::make('error_message')
+        return $schema->components([
+            TextEntry::make('external_id')->label('ID'),
+            TextEntry::make('to')->label('Destinatário'),
+            TextEntry::make('subject')->label('Assunto'),
+            TextEntry::make('content')->label('Conteúdo')->columnSpanFull(),
+            TextEntry::make('status')->label('Estado')->badge(),
+            TextEntry::make('attempts')->label('Tentativas'),
+            TextEntry::make('error_message')
                 ->label('Erro')
                 ->visible(fn ($record) => $record->status === 'failed'),
-            Infolists\Components\TextEntry::make('sent_at')->label('Enviado em')->dateTime('d/m/Y H:i:s'),
-            Infolists\Components\TextEntry::make('created_at')->label('Criado em')->dateTime('d/m/Y H:i:s'),
+            TextEntry::make('sent_at')->label('Enviado em')->dateTime('d/m/Y H:i:s'),
+            TextEntry::make('created_at')->label('Criado em')->dateTime('d/m/Y H:i:s'),
         ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNotifications::route('/'),
-            'view' => Pages\ViewNotification::route('/{record}'),
+            'index' => ListNotifications::route('/'),
+            'view' => ViewNotification::route('/{record}'),
         ];
     }
 }

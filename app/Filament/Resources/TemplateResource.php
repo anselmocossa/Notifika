@@ -2,10 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use App\Filament\Resources\TemplateResource\Pages\ListTemplates;
+use App\Filament\Resources\TemplateResource\Pages\CreateTemplate;
+use App\Filament\Resources\TemplateResource\Pages\EditTemplate;
 use App\Filament\Resources\TemplateResource\Pages;
 use App\Models\Template;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,40 +22,40 @@ use Filament\Tables\Table;
 class TemplateResource extends Resource
 {
     protected static ?string $model = Template::class;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationGroup = 'Configurações';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \UnitEnum | null $navigationGroup = 'Configurações';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('name')
+        return $schema->components([
+            TextInput::make('name')
                 ->label('Slug')
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->placeholder('payment_confirmed')
                 ->helperText('Identificador único usado na API'),
 
-            Forms\Components\TextInput::make('display_name')
+            TextInput::make('display_name')
                 ->label('Nome')
                 ->required()
                 ->placeholder('Confirmação de Pagamento'),
 
-            Forms\Components\TextInput::make('subject')
+            TextInput::make('subject')
                 ->label('Assunto do Email')
                 ->placeholder('Pagamento confirmado - Pedido {{ order_id }}'),
 
-            Forms\Components\Textarea::make('content')
+            Textarea::make('content')
                 ->label('Conteúdo')
                 ->required()
                 ->rows(8)
                 ->placeholder('Olá {{ name }}, o seu pagamento de {{ amount }} foi confirmado.'),
 
-            Forms\Components\TagsInput::make('variables')
+            TagsInput::make('variables')
                 ->label('Variáveis')
                 ->placeholder('Adicionar variável')
                 ->helperText('Variáveis disponíveis: {{ name }}, {{ amount }}, etc.'),
 
-            Forms\Components\Toggle::make('is_active')
+            Toggle::make('is_active')
                 ->label('Activo')
                 ->default(true),
         ]);
@@ -56,14 +65,14 @@ class TemplateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('Slug')->searchable(),
-                Tables\Columns\TextColumn::make('display_name')->label('Nome')->searchable(),
-                Tables\Columns\TextColumn::make('subject')->label('Assunto')->limit(40),
-                Tables\Columns\IconColumn::make('is_active')->label('Activo')->boolean(),
-                Tables\Columns\TextColumn::make('notifications_count')
+                TextColumn::make('name')->label('Slug')->searchable(),
+                TextColumn::make('display_name')->label('Nome')->searchable(),
+                TextColumn::make('subject')->label('Assunto')->limit(40),
+                IconColumn::make('is_active')->label('Activo')->boolean(),
+                TextColumn::make('notifications_count')
                     ->label('Envios')
                     ->counts('notifications'),
-                Tables\Columns\TextColumn::make('created_at')->label('Criado')->dateTime('d/m/Y'),
+                TextColumn::make('created_at')->label('Criado')->dateTime('d/m/Y'),
             ])
             ->defaultSort('created_at', 'desc');
     }
@@ -71,9 +80,9 @@ class TemplateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTemplates::route('/'),
-            'create' => Pages\CreateTemplate::route('/create'),
-            'edit' => Pages\EditTemplate::route('/{record}/edit'),
+            'index' => ListTemplates::route('/'),
+            'create' => CreateTemplate::route('/create'),
+            'edit' => EditTemplate::route('/{record}/edit'),
         ];
     }
 }

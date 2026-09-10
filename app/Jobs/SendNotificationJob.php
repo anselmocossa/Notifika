@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Throwable;
 use App\Channels\EmailChannel;
 use App\Models\Notification;
 use Illuminate\Bus\Queueable;
@@ -32,7 +33,7 @@ class SendNotificationJob implements ShouldQueue
         $emailChannel->send($this->notification);
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         $this->notification->markAsFailed($exception->getMessage());
     }
