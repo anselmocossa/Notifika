@@ -65,6 +65,14 @@ e o projecto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/)
   autenticar, com o mesmo hash, depois do upgrade (CA-01).
   `NonClientAuthenticationApiTest` cobre o 403 em JSON de um autenticável
   que não seja `Client`.
+- **Painel com Launchpad.** A entrada do painel passa a ser o Launchpad (navegação no
+  topo, sem menu lateral) com cartões e KPIs: enviadas hoje, clientes activos, modelos
+  activos, envios nos últimos 30 dias, alterações por publicar e cartões configurados
+  (`LaunchpadKpisTest`). Os cartões são semeados pela migração
+  `2026_09_10_095000_seed_notifika_launchpad_cards`. Novos plugins `filament-changelog`
+  (lê este `CHANGELOG.md`) e `filament-sentinel`. Clientes, Notificações e Modelos ganham
+  página de detalhe, separadores com contagens (activos/inactivos, estados da fila) e
+  formulário, infolist e tabela em classes próprias (`Schemas/`, `Tables/`).
 
 ### Alterado
 

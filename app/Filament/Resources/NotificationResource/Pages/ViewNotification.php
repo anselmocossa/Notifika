@@ -8,4 +8,9 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewNotification extends ViewRecord
 {
     protected static string $resource = NotificationResource::class;
+
+    public function getTitle(): string
+    {
+        return $this->getRecord()->external_id;
+    }
 }
