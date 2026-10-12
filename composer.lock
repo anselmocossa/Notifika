@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d3e6788eff5d02d3571bf8954a74c3c",
+    "content-hash": "6350e21df0394fe1e36f3b208e7d34ad",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -70,6 +70,262 @@
                 "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.3.11"
             },
             "time": "2026-08-07T06:14:19+00:00"
+        },
+        {
+            "name": "anselmocossa/filament-launchpad",
+            "version": "v1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anselmocossa/filament-launchpad.git",
+                "reference": "691e1c34b43f9328cbe5ff0fccf81eed4607c612"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anselmocossa/filament-launchpad/zipball/691e1c34b43f9328cbe5ff0fccf81eed4607c612",
+                "reference": "691e1c34b43f9328cbe5ff0fccf81eed4607c612",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "illuminate/contracts": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "laravel/prompts": "^0.1.24|^0.2|^0.3",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.0|^8.0",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0",
+                "spatie/laravel-permission": "^8.3"
+            },
+            "suggest": {
+                "bezhansalleh/filament-shield": "Required to manage the Permission field's roles from a Filament UI (Spatie roles/permissions admin).",
+                "spatie/laravel-permission": "Required for role-based visibility on Spaces/Pages/Sections/Cards; without it, everything is visible to everyone."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Filament\\Launchpad\\LaunchpadServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Filament\\Launchpad\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Filament\\Launchpad\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/pest --no-coverage"
+                ],
+                "lint": [
+                    "vendor/bin/pint"
+                ],
+                "lint-fix": [
+                    "vendor/bin/pint --repair"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anselmo Cossa",
+                    "email": "anselmo.cossa@enh.co.mz",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Transform your Filament v5 panel homepage into a SAP Fiori-style launchpad: Spaces, Pages, Sections and drag-and-drop KPI/shortcut/widget cards with role-based visibility.",
+            "homepage": "https://github.com/anselmocossa/filament-launchpad",
+            "keywords": [
+                "dashboard",
+                "filament",
+                "filament-plugin",
+                "fiori",
+                "laravel",
+                "launchpad",
+                "sap"
+            ],
+            "support": {
+                "issues": "https://github.com/anselmocossa/filament-launchpad/issues",
+                "source": "https://github.com/anselmocossa/filament-launchpad"
+            },
+            "time": "2026-09-26T10:25:13+00:00"
+        },
+        {
+            "name": "anselmokossa/filament-changelog",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anselmocossa/filament-changelog.git",
+                "reference": "775fd5b92553181b98d343cbc0a6cc1b73304ed1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anselmocossa/filament-changelog/zipball/775fd5b92553181b98d343cbc0a6cc1b73304ed1",
+                "reference": "775fd5b92553181b98d343cbc0a6cc1b73304ed1",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "illuminate/contracts": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.0|^8.0",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Filament\\Changelog\\ChangelogServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Filament\\Changelog\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Filament\\Changelog\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/pest --no-coverage"
+                ],
+                "lint": [
+                    "vendor/bin/pint"
+                ],
+                "lint-fix": [
+                    "vendor/bin/pint --repair"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anselmo Kossa",
+                    "email": "anselmo.cossa@enh.co.mz",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Manage, read and generate Keep a Changelog files inside Filament — hybrid database + CHANGELOG.md workflow.",
+            "homepage": "https://github.com/anselmocossa/filament-changelog",
+            "keywords": [
+                "changelog",
+                "filament",
+                "filament-plugin",
+                "keep-a-changelog",
+                "laravel",
+                "release-notes"
+            ],
+            "support": {
+                "source": "https://github.com/anselmocossa/filament-changelog/tree/v1.2.0",
+                "issues": "https://github.com/anselmocossa/filament-changelog/issues"
+            },
+            "time": "2026-08-01T20:13:00+00:00"
+        },
+        {
+            "name": "anselmokossa/filament-sentinel",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/anselmocossa/filament-sentinel.git",
+                "reference": "515bbcc6f8c2131db36332fcdb05eed7fc50bb52"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/anselmocossa/filament-sentinel/zipball/515bbcc6f8c2131db36332fcdb05eed7fc50bb52",
+                "reference": "515bbcc6f8c2131db36332fcdb05eed7fc50bb52",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "illuminate/contracts": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.0|^8.0",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Filament\\Sentinel\\SentinelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Filament\\Sentinel\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Filament\\Sentinel\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/pest --no-coverage"
+                ],
+                "lint": [
+                    "vendor/bin/pint"
+                ],
+                "lint-fix": [
+                    "vendor/bin/pint --repair"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anselmo Kossa",
+                    "email": "anselmo.cossa@enh.co.mz",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Branded, diagnostic error pages (500, 403, 404, 419, 503) for Filament — native Filament UI, dark mode and translations out of the box.",
+            "homepage": "https://github.com/anselmocossa/filament-sentinel",
+            "keywords": [
+                "error-pages",
+                "exception-handler",
+                "filament",
+                "filament-plugin",
+                "http-errors",
+                "laravel"
+            ],
+            "support": {
+                "source": "https://github.com/anselmocossa/filament-sentinel/tree/v1.2.1",
+                "issues": "https://github.com/anselmocossa/filament-sentinel/issues"
+            },
+            "time": "2026-08-04T21:47:02+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -5465,16 +5721,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v8.1.6",
+            "version": "v8.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "eb7d9957d66739649e931ce7a9d05dab69f8abac"
+                "reference": "29afb89f4e941f68a6e90f28e3f52ff1f6793a7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/eb7d9957d66739649e931ce7a9d05dab69f8abac",
-                "reference": "eb7d9957d66739649e931ce7a9d05dab69f8abac",
+                "url": "https://api.github.com/repos/symfony/console/zipball/29afb89f4e941f68a6e90f28e3f52ff1f6793a7d",
+                "reference": "29afb89f4e941f68a6e90f28e3f52ff1f6793a7d",
                 "shasum": ""
             },
             "require": {
@@ -5541,7 +5797,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v8.1.6"
+                "source": "https://github.com/symfony/console/tree/v8.1.7"
             },
             "funding": [
                 {
@@ -5561,7 +5817,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-25T14:18:42+00:00"
+            "time": "2026-09-13T10:55:57+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -7590,16 +7846,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v8.1.2",
+            "version": "v8.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc"
+                "reference": "d950140b5f56f31901e5b7a0c04ffc3a3deb943c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc",
-                "reference": "286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc",
+                "url": "https://api.github.com/repos/symfony/string/zipball/d950140b5f56f31901e5b7a0c04ffc3a3deb943c",
+                "reference": "d950140b5f56f31901e5b7a0c04ffc3a3deb943c",
                 "shasum": ""
             },
             "require": {
@@ -7656,7 +7912,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v8.1.2"
+                "source": "https://github.com/symfony/string/tree/v8.1.7"
             },
             "funding": [
                 {
@@ -7676,7 +7932,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-28T07:35:25+00:00"
+            "time": "2026-09-11T14:51:16+00:00"
         },
         {
             "name": "symfony/translation",

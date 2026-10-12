@@ -7,6 +7,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "anselmocossa/filament-launchpad": "^1.8",
+        "anselmokossa/filament-changelog": "^1.2",
+        "anselmokossa/filament-sentinel": "^1.2",
         "filament/filament": "^5.0",
         "laravel/framework": "^13.0",
         "laravel/sanctum": "^4.0",
@@ -86,5 +89,19 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/anselmocossa/filament-changelog"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/anselmocossa/filament-launchpad"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/anselmocossa/filament-sentinel"
+        }
+    ]
 }
